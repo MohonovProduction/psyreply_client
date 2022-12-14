@@ -2,29 +2,41 @@
   <div class="main">
     <div class="main__bottom">
 
+<!--      TODO: do beautiful-->
       <template v-if="allDataIsReady">
-        <y-modal v-if="showEndBanner">
-          <h1>Тест пройден</h1>
-        </y-modal>
+        <template v-if="step === 'before-test'">
+          <y-modal>
+            <y-cool-button @click="startTest">Начать тестирование</y-cool-button>
+          </y-modal>
+        </template>
 
-        <template v-for="(test, test_arr_id) in blockOnPass.tests" :key="test.createdAt">
-          <template v-for="(question, question_arr_id) in test.questions" :key="`${question.createdAt}${question.id}`">
-            <template v-if="testNow === test_arr_id && questionNow === question_arr_id">
-              <template v-if="question.type_id === 1">
-                <question-type3
-                  :test-arr-id="test_arr_id"
-                  :question-arr-id="question_arr_id"
-                  @next="nextQuestion"
-                />
-              </template>
-              <template v-else-if="question.type_id === 2">
-                <question-type1 />
-              </template>
-              <template v-else>
-                <question-type2 />
+        <template v-if="step === 'testing'">
+          <template v-for="(test, test_arr_id) in blockOnPass.tests" :key="test.createdAt">
+            <template v-for="(question, question_arr_id) in test.questions" :key="`${question.createdAt}${question.id}`">
+              <template v-if="testNow === test_arr_id && questionNow === question_arr_id">
+                <template v-if="question.type_id === 1">
+                  <question-type3
+                    :test-arr-id="test_arr_id"
+                    :question-arr-id="question_arr_id"
+                    @next="nextQuestion"
+                  />
+                </template>
+                <template v-else-if="question.type_id === 2">
+                  <question-type1 />
+                </template>
+                <template v-else>
+                  <question-type2 />
+                </template>
               </template>
             </template>
           </template>
+        </template>
+
+<!--        TODO: do beautiful-->
+        <template v-if="step === 'after-test'">
+          <y-modal>
+            <h1>Тестирование окончено</h1>
+          </y-modal>
         </template>
       </template>
     </div>
@@ -45,10 +57,16 @@ export default {
     return {
       testNow: 0,
       questionNow: 0,
-      showEndBanner: false
+      step: 'before-test',
+      startTime: null,
+      endTime: null
     }
   },
   methods: {
+    startTest() {
+      this.step = 'testing'
+      this.startTime = Date.now()
+    },
     nextQuestion() {
       if (!(this.blockOnPass.tests.length - 1 === this.testNow)) {
         if (this.blockOnPass.tests[this.testNow].questions.length - 1 === this.questionNow) {
@@ -59,7 +77,10 @@ export default {
         }
       } else {
         this.testNow++
-        this.showEndBanner = true
+        this.step = 'after-test'
+        this.endTime = Date.now()
+        const timeOnPas = this.endTime - this.startTime
+        this.$store.commit('setTimeOnPass', timeOnPas)
       }
     }
   },

@@ -5,7 +5,7 @@ export default createStore({
   state: {
     blockOnPass: null,
     passedBlock: null,
-    allDataIsReady: false
+    allDataIsReady: false,
   },
   getters: {
     blockOnPass(state) {
@@ -32,6 +32,9 @@ export default createStore({
     selectAnswer(state, data) {
       const test = state.passedBlock.tests[data.test_id]
       test.answers[data.question_id].answer = data.answer
+    },
+    setTimeOnPass(state, data) {
+      state.passedBlock.time_on_pass = data
     }
   },
   actions: {
