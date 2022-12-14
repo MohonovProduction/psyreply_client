@@ -1,17 +1,23 @@
 <template>
 <div class="yqlist">
-  <y-question-item></y-question-item>
+  <y-question-item
+    :test-arr-id="testArrId"
+    :question-arr-id="questionArrId"
+  />
+<!--  <hr>
+  <y-question-item />
   <hr>
-  <y-question-item></y-question-item>
-  <hr>
-  <y-question-item></y-question-item>
-
+  <y-question-item />-->
 </div>
 </template>
 
 <script>
 export default {
-  name: "YQuestionsList"
+  name: "YQuestionsList",
+  props: {
+    testArrId: Number,
+    questionArrId: Number,
+  }
 }
 </script>
 

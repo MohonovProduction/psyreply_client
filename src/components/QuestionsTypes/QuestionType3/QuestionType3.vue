@@ -11,13 +11,16 @@
         <y-cool-button
           class="q__button"
           @click="$emit('next')"
-        >Продолжить</y-cool-button>
+          :disabled="!haveAnswer"
+        >
+          Продолжить
+        </y-cool-button>
         <div class="q__coins__per">
-                    <div class="coins">
-                      <img class="coins__img" src="@/assets/img/coins.svg" alt="">
-                      <p>{{questionData.coins}}</p>
-                    </div>
-          <p class="test__percent">10% пройдено</p>
+          <div class="coins">
+            <img class="coins__img" src="@/assets/img/coins.svg" alt="">
+            <p>{{questionData.coins}}</p>
+          </div>
+          <p class="test__percent">{{ passed }}% пройдено</p>
         </div>
       </div>
     </y-modal>
@@ -31,6 +34,7 @@ export default {
   props: {
     testArrId: Number,
     questionArrId: Number,
+    passed: Number
   },
   computed: {
     questionData() {
@@ -39,6 +43,14 @@ export default {
         question_id: this.questionArrId
       }
       return this.$store.getters.questionData(coordinates)
+    },
+    haveAnswer() {
+      const coordinates = {
+        test_id: this.testArrId,
+        answer_id: this.questionArrId
+      }
+      const answer = this.$store.getters.passedBlockAnswer(coordinates)
+      return (answer.length > 0)
     }
   }
 }

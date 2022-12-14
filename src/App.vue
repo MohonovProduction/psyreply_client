@@ -18,14 +18,25 @@
                   <question-type3
                     :test-arr-id="test_arr_id"
                     :question-arr-id="question_arr_id"
-                    @next="nextQuestion"
+                    :passed="percentOfPass"
+                    @next="nextQuestion(1)"
                   />
                 </template>
                 <template v-else-if="question.type_id === 2">
-                  <question-type1 />
+                  <question-type1
+                    :test-arr-id="test_arr_id"
+                    :question-arr-id="question_arr_id"
+                    :passed="percentOfPass"
+                    @next="nextQuestion(1)"
+                  />
                 </template>
                 <template v-else>
-                  <question-type2 />
+                  <question-type2
+                    :test-arr-id="test_arr_id"
+                    :question-arr-id="question_arr_id"
+                    :passed="percentOfPass"
+                    @next="nextQuestion"
+                  />
                 </template>
               </template>
             </template>
@@ -67,20 +78,30 @@ export default {
       this.step = 'testing'
       this.startTime = Date.now()
     },
-    nextQuestion() {
-      if (!(this.blockOnPass.tests.length - 1 === this.testNow)) {
-        if (this.blockOnPass.tests[this.testNow].questions.length - 1 === this.questionNow) {
-          this.testNow++
-          this.questionNow = 0
+    nextQuestion(m) {
+      const tests = this.blockOnPass.tests
+      const questions = tests[this.testNow].questions
+
+      if (this.testNow !== tests.length) {
+        if (this.questionNow !== questions.length - 1) {
+          this.questionNow += m
         } else {
-          this.questionNow++
+          this.questionNow = 0
+          this.testNow++
         }
-      } else {
+        this.$store.commit('answersPassedIncrement')
+      }
+
+      if (this.testNow === tests.length) {
         this.testNow++
+
         this.step = 'after-test'
+
         this.endTime = Date.now()
         const timeOnPas = this.endTime - this.startTime
         this.$store.commit('setTimeOnPass', timeOnPas)
+
+        this.$store.dispatch('passBlock')
       }
     }
   },
@@ -90,6 +111,9 @@ export default {
     },
     allDataIsReady() {
       return this.$store.getters.isAllDataReady
+    },
+    percentOfPass() {
+      return this.$store.getters.relationAnswersAndPassedAnswers
     }
   }
 }
