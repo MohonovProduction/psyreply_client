@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="main__bottom">
-
+тз
       <template v-if="allDataIsReady">
         <y-modal v-if="showEndBanner">
           <h1>Тест пройден</h1>
