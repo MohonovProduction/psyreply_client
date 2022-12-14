@@ -2,13 +2,12 @@
   <div class="YAnswersList">
     <div class="modal">
       <div class="list">
-        <y-answers-item>Я регулярно поддерживаю физическую форму</y-answers-item>
-        <y-answers-item>Я регулярно поддерживаю физическую форму</y-answers-item>
-        <y-answers-item>Я регулярно поддерживаю физическую форму</y-answers-item>
-        <y-answers-item>Я регулярно поддерживаю физическую форму</y-answers-item>
-        <y-answers-item>Я регулярно поддерживаю физическую форму</y-answers-item>
+        <y-answers-item
+          v-for="(answer, answer_arr_id) in answers"
+          :active="(answer.id === selectedAnswer[0])"
+          @click="selectAnswer(answer.id)"
+        >{{ answer.title }}</y-answers-item>
       </div>
-
     </div>
   </div>
 </template>
@@ -17,7 +16,36 @@
 
 export default {
   name: "YAnswersList",
-  components: {}
+  props: {
+    testArrId: Number,
+    questionArrId: Number,
+  },
+  data() {
+    return {
+      selectedAnswer: []
+    }
+  },
+  methods: {
+    selectAnswer(id) {
+      this.selectedAnswer[0] = id
+      const data = {
+        test_id: this.testArrId,
+        question_id: this.questionArrId,
+        answer: this.selectedAnswer
+      }
+      this.$store.commit('selectAnswer', data)
+    },
+  },
+  computed: {
+    answers() {
+      const coordinates = {
+        test_id: this.testArrId,
+        question_id: this.questionArrId
+      }
+      const question = this.$store.getters.questionData(coordinates)
+      return JSON.parse(question.value)
+    }
+  }
 }
 </script>
 

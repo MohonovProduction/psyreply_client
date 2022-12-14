@@ -1,15 +1,39 @@
 <template>
   <div class="main">
     <div class="main__bottom">
-      <QuestionType2></QuestionType2>
-    </div>
 
+      <template v-if="allDataIsReady">
+        <y-modal v-if="showEndBanner">
+          <h1>Тест пройден</h1>
+        </y-modal>
+
+        <template v-for="(test, test_arr_id) in blockOnPass.tests" :key="test.createdAt">
+          <template v-for="(question, question_arr_id) in test.questions" :key="`${question.createdAt}${question.id}`">
+            <template v-if="testNow === test_arr_id && questionNow === question_arr_id">
+              <template v-if="question.type_id === 1">
+                <question-type3
+                  :test-arr-id="test_arr_id"
+                  :question-arr-id="question_arr_id"
+                  @next="nextQuestion"
+                />
+              </template>
+              <template v-else-if="question.type_id === 2">
+                <question-type1 />
+              </template>
+              <template v-else>
+                <question-type2 />
+              </template>
+            </template>
+          </template>
+        </template>
+      </template>
+    </div>
   </div>
 </template>
 <script>
 import QuestionType1 from "@/components/QuestionsTypes/QuestionType1/QuestionType1.vue";
 import QuestionType2 from "./components/QuestionsTypes/QuestionType2/QuestionType2";
-import QuestionType3 from "./components/QuestionsTypes/QuesitonType3/QuestionType3";
+import QuestionType3 from "./components/QuestionsTypes/QuestionType3/QuestionType3";
 export default {
   components:{
     QuestionType1,QuestionType2,QuestionType3,
@@ -17,12 +41,34 @@ export default {
   created() {
     this.$store.dispatch('getBlock')
   },
+  data() {
+    return {
+      testNow: 0,
+      questionNow: 0,
+      showEndBanner: false
+    }
+  },
   methods: {
-
+    nextQuestion() {
+      if (!(this.blockOnPass.tests.length - 1 === this.testNow)) {
+        if (this.blockOnPass.tests[this.testNow].questions.length - 1 === this.questionNow) {
+          this.testNow++
+          this.questionNow = 0
+        } else {
+          this.questionNow++
+        }
+      } else {
+        this.testNow++
+        this.showEndBanner = true
+      }
+    }
   },
   computed: {
     blockOnPass() {
       return this.$store.getters.blockOnPass
+    },
+    allDataIsReady() {
+      return this.$store.getters.isAllDataReady
     }
   }
 }

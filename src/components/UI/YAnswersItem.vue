@@ -4,7 +4,10 @@
     <div class="item__text">
       <slot></slot>
     </div>
-    <div class="item__elipce"></div>
+    <div
+      class="item__elipce"
+      :class="{ 'item__elipce--active': active }"
+    ></div>
   </div>
 
   <hr>
@@ -13,7 +16,10 @@
 
 <script>
 export default {
-  name: "YAnswersItem"
+  name: "YAnswersItem",
+  props: {
+    active: Boolean
+  }
 }
 </script>
 
@@ -32,6 +38,9 @@ export default {
   height: 0.7rem;
   border-radius: 50%;
   background-color: rgba(217, 217, 217, 0.17);;
+}
+.item__elipce--active {
+  background-color: hsl(137, 100%, 65%);
 }
 hr {
   margin-top: 1rem;

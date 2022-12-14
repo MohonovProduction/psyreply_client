@@ -5,10 +5,18 @@ export default createStore({
   state: {
     blockOnPass: null,
     passedBlock: null,
+    allDataIsReady: false
   },
   getters: {
     blockOnPass(state) {
       return state.blockOnPass
+    },
+    isAllDataReady(state) {
+      return state.allDataIsReady
+    },
+    questionData: (state) => (coordinates) => {
+      const test = state.blockOnPass.tests[coordinates.test_id]
+      return test.questions[coordinates.question_id]
     }
   },
   mutations: {
@@ -17,6 +25,13 @@ export default createStore({
     },
     updatePassedBlock(state, block) {
       state.passedBlock = block
+    },
+    allDataIsReady(state) {
+      state.allDataIsReady = true
+    },
+    selectAnswer(state, data) {
+      const test = state.passedBlock.tests[data.test_id]
+      test.answers[data.question_id].answer = data.answer
     }
   },
   actions: {
@@ -44,6 +59,7 @@ export default createStore({
                 })
               })
               commit('updatePassedBlock', passedBlock)
+              commit('allDataIsReady')
             })
           }
         })
