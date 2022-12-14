@@ -1,7 +1,6 @@
 <template>
   <div class="main">
     <div class="main__bottom">
-
 <!--      TODO: do beautiful-->
       <template v-if="allDataIsReady">
         <template v-if="step === 'before-test'">
