@@ -5,11 +5,16 @@ export default createStore({
   state: {
     blockOnPass: null,
     passedBlock: null,
-    allDataIsReady: false
+    allDataIsReady: false,
+    answersCount: null,
+    answersPassed: null,
   },
   getters: {
     blockOnPass(state) {
       return state.blockOnPass
+    },
+    passedBlock(state) {
+      return state.passedBlock
     },
     isAllDataReady(state) {
       return state.allDataIsReady
@@ -17,6 +22,13 @@ export default createStore({
     questionData: (state) => (coordinates) => {
       const test = state.blockOnPass.tests[coordinates.test_id]
       return test.questions[coordinates.question_id]
+    },
+    passedBlockAnswer: (state) => (coordinates) => {
+      const test = state.passedBlock.tests[coordinates.test_id]
+      return test.answers[coordinates.answer_id].answer
+    },
+    relationAnswersAndPassedAnswers(state) {
+      return Math.floor(state.answersPassed / state.answersCount * 100  )
     }
   },
   mutations: {
@@ -32,6 +44,15 @@ export default createStore({
     selectAnswer(state, data) {
       const test = state.passedBlock.tests[data.test_id]
       test.answers[data.question_id].answer = data.answer
+    },
+    setTimeOnPass(state, data) {
+      state.passedBlock.time_on_pass = data
+    },
+    answersPassedIncrement(state) {
+      state.answersPassed++
+    },
+    setAnswersCount(state, data) {
+      state.answersCount = data
     }
   },
   actions: {
@@ -46,6 +67,7 @@ export default createStore({
                 time_on_pass: 0,
                 tests: []
               }
+              let answersCount = 0
               r.tests.forEach(test => {
                 passedBlock.tests.push({
                   test_id: test.id,
@@ -56,13 +78,20 @@ export default createStore({
                     question_id: question.id,
                     answer: []
                   })
+                  answersCount++
                 })
               })
               commit('updatePassedBlock', passedBlock)
               commit('allDataIsReady')
+              commit('setAnswersCount', answersCount)
             })
           }
         })
+    },
+    async passBlock(ctx) {
+      const client = new Client()
+      client.passBlock(ctx.getters.passedBlock)
+        .then(res => {})
     }
   },
   modules: {

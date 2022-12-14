@@ -1,7 +1,8 @@
 export default class Client {
   host = 'https://api.psyreply.com'
   headers = {
-    'Authorization': 'Bearer ' + localStorage.getItem('user_token')
+    'Authorization': 'Bearer ' + localStorage.getItem('user_token'),
+    'Content-Type': 'application/json'
   }
 
   execute(url, init) {
@@ -16,6 +17,16 @@ export default class Client {
     return this.execute(`${this.host}/block/user`, {
       method: 'GET',
       headers: this.headers
+    })
+  }
+
+  passBlock(data) {
+    data = JSON.stringify(data)
+
+    return this.execute(`${this.host}/result/block/pass`, {
+      method: 'POST',
+      headers: this.headers,
+      body: data
     })
   }
 }

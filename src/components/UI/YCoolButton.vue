@@ -1,12 +1,15 @@
 <template>
-  <button class="button button_cool">
+  <button class="button button_cool" :disabled="disabled">
     <slot></slot>
   </button>
 </template>
 
 <script>
 export default {
-  name: "YCoolButton"
+  name: "YCoolButton",
+  props: {
+    disabled: Boolean
+  }
 }
 </script>
 
@@ -27,6 +30,9 @@ export default {
 }
 .button_cool:active {
   background: linear-gradient(200.42deg, #844FFC 13.57%, #4e0fea 98.35%);
+}
+.button_cool:disabled {
+  opacity: .5;
 }
 @media screen and (max-width:820px){
   .button_cool {

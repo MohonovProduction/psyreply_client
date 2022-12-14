@@ -4,15 +4,48 @@
      Я всегда стремлюсь делать работу до конца, но часто не успеваю
    </p>
    <div class="buttons">
-     <y-button>Да</y-button>
-     <y-button>Нет</y-button>
+     <y-button
+       v-for="answer in answers"
+       @click="selectAnswer(answer.id)"
+       :active="(selectedAnswer[0] === answer.id)"
+     >{{answer.title}}</y-button>
    </div>
  </div>
 </template>
 
 <script>
 export default {
-  name: "YQuestionItem"
+  name: "YQuestionItem",
+  props: {
+    testArrId: Number,
+    questionArrId: Number,
+  },
+  data() {
+    return {
+      selectedAnswer: []
+    }
+  },
+  methods: {
+    selectAnswer(id) {
+      this.selectedAnswer[0] = id
+      const data = {
+        test_id: this.testArrId,
+        question_id: this.questionArrId,
+        answer: this.selectedAnswer
+      }
+      this.$store.commit('selectAnswer', data)
+    }
+  },
+  computed: {
+    answers() {
+      const coordinates = {
+        test_id: this.testArrId,
+        question_id: this.questionArrId
+      }
+      const question = this.$store.getters.questionData(coordinates)
+      return JSON.parse(question.value)
+    }
+  }
 }
 </script>
 <style scoped>

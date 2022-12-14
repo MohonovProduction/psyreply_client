@@ -1,5 +1,5 @@
 <template>
-  <button class="button" type="submit"  >
+  <button class="button" :class="{ 'button--active': active }">
     <slot></slot>
     <span v-if="plus" class="button__symbol">+</span>
   </button>
@@ -12,11 +12,12 @@ export default {
     plus:{
       type: Boolean,
       default: false
+    },
+    active: {
+      type: Boolean,
+      default: false
     }
   }
-
-
-
 }
 
 </script>
@@ -35,6 +36,9 @@ export default {
 }
 .button:hover {
   cursor: pointer;
+}
+.button--active {
+  background: linear-gradient(200.42deg, #B275FF 13.57%, #DD7EFF 98.35%);
 }
 .button__symbol {
   margin-left: .6rem;
