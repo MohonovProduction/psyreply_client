@@ -1,54 +1,55 @@
 <template>
   <div class="main">
     <div class="main__bottom">
+      <results></results>
 <!--      TODO: do beautiful-->
-      <template v-if="allDataIsReady">
-        <template v-if="step === 'before-test'">
-          <y-modal>
-            <y-cool-button @click="startTest">Начать тестирование</y-cool-button>
-          </y-modal>
-        </template>
+<!--      <template v-if="allDataIsReady">-->
+<!--        <template v-if="step === 'before-test'">-->
+<!--          <y-modal>-->
+<!--            <y-cool-button @click="startTest">Начать тестирование</y-cool-button>-->
+<!--          </y-modal>-->
+<!--        </template>-->
 
-        <template v-if="step === 'testing'">
-          <template v-for="(test, test_arr_id) in blockOnPass.tests" :key="test.createdAt">
-            <template v-for="(question, question_arr_id) in test.questions" :key="`${question.createdAt}${question.id}`">
-              <template v-if="testNow === test_arr_id && questionNow === question_arr_id">
-                <template v-if="question.type_id === 1">
-                  <question-type3
-                    :test-arr-id="test_arr_id"
-                    :question-arr-id="question_arr_id"
-                    :passed="percentOfPass"
-                    @next="nextQuestion(1)"
-                  />
-                </template>
-                <template v-else-if="question.type_id === 2">
-                  <question-type1
-                    :test-arr-id="test_arr_id"
-                    :question-arr-id="question_arr_id"
-                    :passed="percentOfPass"
-                    @next="nextQuestion(1)"
-                  />
-                </template>
-                <template v-else>
-                  <question-type2
-                    :test-arr-id="test_arr_id"
-                    :question-arr-id="question_arr_id"
-                    :passed="percentOfPass"
-                    @next="nextQuestion"
-                  />
-                </template>
-              </template>
-            </template>
-          </template>
-        </template>
+<!--        <template v-if="step === 'testing'">-->
+<!--          <template v-for="(test, test_arr_id) in blockOnPass.tests" :key="test.createdAt">-->
+<!--            <template v-for="(question, question_arr_id) in test.questions" :key="`${question.createdAt}${question.id}`">-->
+<!--              <template v-if="testNow === test_arr_id && questionNow === question_arr_id">-->
+<!--                <template v-if="question.type_id === 1">-->
+<!--                  <question-type3-->
+<!--                    :test-arr-id="test_arr_id"-->
+<!--                    :question-arr-id="question_arr_id"-->
+<!--                    :passed="percentOfPass"-->
+<!--                    @next="nextQuestion(1)"-->
+<!--                  />-->
+<!--                </template>-->
+<!--                <template v-else-if="question.type_id === 2">-->
+<!--                  <question-type1-->
+<!--                    :test-arr-id="test_arr_id"-->
+<!--                    :question-arr-id="question_arr_id"-->
+<!--                    :passed="percentOfPass"-->
+<!--                    @next="nextQuestion(1)"-->
+<!--                  />-->
+<!--                </template>-->
+<!--                <template v-else>-->
+<!--                  <question-type2-->
+<!--                    :test-arr-id="test_arr_id"-->
+<!--                    :question-arr-id="question_arr_id"-->
+<!--                    :passed="percentOfPass"-->
+<!--                    @next="nextQuestion"-->
+<!--                  />-->
+<!--                </template>-->
+<!--              </template>-->
+<!--            </template>-->
+<!--          </template>-->
+<!--        </template>-->
 
-<!--        TODO: do beautiful-->
-        <template v-if="step === 'after-test'">
-          <y-modal>
-            <h1>Тестирование окончено</h1>
-          </y-modal>
-        </template>
-      </template>
+<!--&lt;!&ndash;        TODO: do beautiful&ndash;&gt;-->
+<!--        <template v-if="step === 'after-test'">-->
+<!--          <y-modal>-->
+<!--            <h1>Тестирование окончено</h1>-->
+<!--          </y-modal>-->
+<!--        </template>-->
+<!--      </template>-->
     </div>
   </div>
 </template>
@@ -56,9 +57,11 @@
 import QuestionType1 from "@/components/QuestionsTypes/QuestionType1/QuestionType1.vue";
 import QuestionType2 from "./components/QuestionsTypes/QuestionType2/QuestionType2";
 import QuestionType3 from "./components/QuestionsTypes/QuestionType3/QuestionType3";
+import Results from "./components/Results";
+
 export default {
   components:{
-    QuestionType1,QuestionType2,QuestionType3,
+    QuestionType1,QuestionType2,QuestionType3,Results
   },
   created() {
     this.$store.dispatch('getBlock')
