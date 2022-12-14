@@ -60,7 +60,7 @@ export default {
 .question__text{
   margin-top: 1rem;
  width: 50rem;
-  font-size: 1.2rem;
+  font-size: 3rem;
   text-align: center;
 }
 .q__button--disable {

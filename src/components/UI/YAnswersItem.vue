@@ -32,6 +32,7 @@ export default {
 }
 .item__text{
   width: 20rem;
+  font-size:2rem;
 }
 .item__elipce{
   width: 0.7rem;

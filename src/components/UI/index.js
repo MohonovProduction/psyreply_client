@@ -6,6 +6,8 @@ import YQuestionItem from "@/components/UI/YQuestionItem";
 import YRange from "@/components/UI/YRange";
 import YAnswersItem from "@/components/UI/YAnswersItem";
 import YAnswersList from "@/components/UI/YAnswersList";
+import YResultsItem from "./YResultsItem";
+
 
 
 
@@ -17,7 +19,8 @@ export default [
     YQuestionItem,
     YRange,
     YAnswersItem,
-    YAnswersList
+    YAnswersList,
+    YResultsItem,
 
 
 
