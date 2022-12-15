@@ -24,10 +24,9 @@ export default createStore({
       return test.questions[coordinates.question_id]
     },
     questionByGroupData: (state) => (coordinates) => {
-      const group_id = Math.floor(coordinates.question_id / 3)
-      const question_id = coordinates.question_id % 3
       const test = state.blockOnPass.tests[coordinates.test_id]
-      return test.questions[group_id][question_id]
+      const questionsGroup = test.questions[coordinates.question_arr_id]
+      return questionsGroup[coordinates.question_id]
     },
     passedBlockAnswer: (state) => (coordinates) => {
       const test = state.passedBlock.tests[coordinates.test_id]

@@ -3,7 +3,8 @@
   <template v-for="(question, id) in questionData" :key="`${question.createdAt}${question.id}`">
     <y-question-item
       :test-arr-id="testArrId"
-      :question-arr-id="questionArrId + id"
+      :question-arr-id="questionArrId"
+      :question-id="id"
     />
     <hr>
   </template>

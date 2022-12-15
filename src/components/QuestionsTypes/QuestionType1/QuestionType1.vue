@@ -46,8 +46,7 @@ export default {
       let answers = 0
       for (let i = 0; i <= questions.length - 1; i++) {
         const passedTest = passedBlock.tests[this.testArrId]
-        const answer = passedTest.answers[this.questionArrId + i].answer
-        console.log(answers >=   questions.length)
+        const answer = passedTest.answers[this.questionArrId * 3 + i].answer
         answers += answer.length
       }
 

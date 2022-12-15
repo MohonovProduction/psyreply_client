@@ -85,7 +85,7 @@ export default {
   },
   data() {
     return {
-      testNow: 0,
+      testNow: 1,
       questionNow: 0,
       step: 'before-test',
       startTime: null,

@@ -20,6 +20,7 @@ export default {
   props: {
     testArrId: Number,
     questionArrId: Number,
+    questionId: Number
   },
   data() {
     return {
@@ -29,9 +30,10 @@ export default {
   methods: {
     selectAnswer(id) {
       this.selectedAnswer[0] = id
+      const question_id = this.questionId + this.questionArrId * 3
       const data = {
         test_id: this.testArrId,
-        question_id: this.questionArrId,
+        question_id,
         answer: this.selectedAnswer
       }
       this.$store.commit('selectAnswer', data)
@@ -41,10 +43,10 @@ export default {
     questionData() {
       const coordinates = {
         test_id: this.testArrId,
-        question_id: this.questionArrId
+        question_arr_id: this.questionArrId,
+        question_id: this.questionId
       }
-      const question = this.$store.getters.questionByGroupData(coordinates)
-      return question
+      return this.$store.getters.questionByGroupData(coordinates)
     },
     answers() {
       return JSON.parse(this.questionData.value)
