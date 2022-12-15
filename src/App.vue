@@ -13,6 +13,7 @@
         <template v-if="step === 'testing'">
           <template v-for="(test, test_arr_id) in blockOnPass.tests" :key="test.createdAt">
             <template v-for="(question, question_arr_id) in test.questions" :key="`${question.createdAt}${question.id}`">
+<!--              TODO: change layout for transition animation -->
 <!--              <transition name="slide">-->
                 <template v-if="testNow === test_arr_id && questionNow === question_arr_id">
                   <!--               One fom more  -->

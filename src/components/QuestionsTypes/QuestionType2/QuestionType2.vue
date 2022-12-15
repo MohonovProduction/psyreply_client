@@ -3,17 +3,28 @@
     <y-modal class="q__modal">
       <y-icon class="q__logo" />
       <div class="questions">
-        <p class="question">Я легко прихожу в замешательство</p>
+        <p class="question">{{ questionData.title }}</p>
         <hr>
-        <h2 class="question__status">Очень выражено</h2>
-        <y-range/>
-        <y-cool-button class="q__button">Продолжить</y-cool-button>
+        <h2 class="question__status">{{ selectedAnswerTitle }}</h2>
+        <y-range
+          :min="answer.min"
+          :max="answer.max"
+          :step="1"
+          v-model.number="selectedAnswer"
+        />
+        <y-cool-button
+          class="q__button"
+          @click="$emit('next')"
+          :disabled="!haveAnswer"
+        >
+          Продолжить
+        </y-cool-button>
         <div class="q__coins__per">
 <!--          <div class="coins">-->
 <!--            <img class="coins__img" src="@/assets/img/coins.svg" alt="">-->
 <!--            <p>200</p>-->
 <!--          </div>-->
-          <p class="test__percent">10% пройдено</p>
+          <p class="test__percent">{{passed}}% пройдено</p>
         </div>
       </div>
     </y-modal>
@@ -25,7 +36,56 @@
 import YQuestionsList from "../../UI/YQuestionsList";
 export default {
   name: "QuestionType2",
-  components: {YQuestionsList}
+  components: {YQuestionsList},
+  props: {
+    testArrId: Number,
+    questionArrId: Number,
+    passed: Number,
+  },
+  data() {
+    return {
+      selectedAnswer: null,
+      haveAnswer: false
+    }
+  },
+  computed: {
+    questionData() {
+      const coordinates = {
+        test_id: this.testArrId,
+        question_id: this.questionArrId
+      }
+
+      return this.$store.getters.questionData(coordinates)
+    },
+    answer() {
+      const answers = JSON.parse(this.questionData.value)
+      const options = {}
+      options.max = answers.length - 1
+      options.min = 0
+      return options
+    },
+    selectedAnswerTitle() {
+      const answers = JSON.parse(this.questionData.value)
+      if (typeof this.selectedAnswer === 'number') {
+        return answers[this.selectedAnswer].title
+      } else {
+        return 'Сдвиньте ползунок'
+      }
+    }
+  },
+  watch: {
+    selectedAnswer(newValue, oldValue) {
+      if (typeof newValue === 'number') {
+        this.haveAnswer = true
+        const data = {
+          test_id: this.testArrId,
+          question_id: this.questionArrId,
+          answer: [this.selectedAnswer]
+        }
+        this.$store.commit('selectAnswer', data)
+      }
+    }
+  }
 }
 </script>
 
@@ -73,11 +133,6 @@ export default {
   .q__logo{
     margin-bottom: 2rem;
   }
-  .questions{
-    display: grid;
-    grid-gap: 2.5rem!important;
-
-  }
   .question{
     font-size: 2rem;
   }
@@ -106,11 +161,11 @@ hr {
 .questions{
   margin-top: 2rem;
   display: grid;
-  grid-gap: 1.5rem;
-  justify-content: center;
+  grid-gap: 2.5rem;
+  justify-items: center;
   align-items: center;
   text-align: center;
-
+  width: 100%;
 }
 
 .q__coins__per{
