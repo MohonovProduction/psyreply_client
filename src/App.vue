@@ -75,12 +75,19 @@ import QuestionType1 from "@/components/QuestionsTypes/QuestionType1/QuestionTyp
 import QuestionType2 from "./components/QuestionsTypes/QuestionType2/QuestionType2";
 import QuestionType3 from "./components/QuestionsTypes/QuestionType3/QuestionType3";
 import Results from "./components/Results";
+import router from '@/router';
 
 export default {
   components:{
     QuestionType1,QuestionType2,QuestionType3,Results
   },
   created() {
+    if (window.location.search.length > 0) {
+      const token = window.location.search.split('=')[1]
+      localStorage.setItem('user_token', token)
+      router.push('/')
+    }
+
     this.$store.dispatch('getBlock')
   },
   data() {
