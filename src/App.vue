@@ -13,46 +13,48 @@
         <template v-if="step === 'testing'">
           <template v-for="(test, test_arr_id) in blockOnPass.tests" :key="test.createdAt">
             <template v-for="(question, question_arr_id) in test.questions" :key="`${question.createdAt}${question.id}`">
-              <template v-if="testNow === test_arr_id && questionNow === question_arr_id">
-<!--               One fom more  -->
-                <template v-if="test.type_id === 1">
-                  <question-type3
-                    :test-arr-id="test_arr_id"
-                    :question-arr-id="question_arr_id"
-                    :passed="percentOfPass"
-                    :more="true"
-                    @next="nextQuestion(1)"
-                  />
+<!--              <transition name="slide">-->
+                <template v-if="testNow === test_arr_id && questionNow === question_arr_id">
+                  <!--               One fom more  -->
+                  <template v-if="test.type_id === 1">
+                    <question-type3
+                      :test-arr-id="test_arr_id"
+                      :question-arr-id="question_arr_id"
+                      :passed="percentOfPass"
+                      @next="nextQuestion(1)"
+                    />
+                  </template>
+                  <!--                Yes Not ki -->
+                  <template v-else-if="test.type_id === 2">
+                    <question-type1
+                      :test-arr-id="test_arr_id"
+                      :question-arr-id="question_arr_id"
+                      :passed="percentOfPass"
+                      @next="nextQuestion(1)"
+                    />
+                  </template>
+                  <!--                More from more -->
+                  <!--                NOTE: just check 'more' attribute -->
+                  <template v-else-if="test.type_id === 3">
+                    <question-type3
+                      :test-arr-id="test_arr_id"
+                      :question-arr-id="question_arr_id"
+                      :passed="percentOfPass"
+                      :more="true"
+                      @next="nextQuestion(1)"
+                    />
+                  </template>
+                  <template v-else-if="test.type_id === 4">
+                    <!--                  Range -->
+                    <question-type2
+                      :test-arr-id="test_arr_id"
+                      :question-arr-id="question_arr_id"
+                      :passed="percentOfPass"
+                      @next="nextQuestion"
+                    />
+                  </template>
                 </template>
-<!--                Yes Not ki -->
-                <template v-else-if="test.type_id === 2">
-                  <question-type1
-                    :test-arr-id="test_arr_id"
-                    :question-arr-id="question_arr_id"
-                    :passed="percentOfPass"
-                    @next="nextQuestion(1)"
-                  />
-                </template>
-<!--                More from more -->
-                <template v-else-if="test.type_id === 3">
-                  <question-type3
-                    :test-arr-id="test_arr_id"
-                    :question-arr-id="question_arr_id"
-                    :passed="percentOfPass"
-                    :more="true"
-                    @next="nextQuestion(1)"
-                  />
-                </template>
-                <template v-else-if="test.type_id === 4">
-<!--                  Range -->
-                  <question-type2
-                    :test-arr-id="test_arr_id"
-                    :question-arr-id="question_arr_id"
-                    :passed="percentOfPass"
-                    @next="nextQuestion"
-                  />
-                </template>
-              </template>
+<!--              </transition>-->
             </template>
           </template>
         </template>
@@ -137,6 +139,24 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
 
+/* TODO: fix layout for animation */
+
+.slide-leave-active,
+.slide-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.5s;
+}
+
+.slide-enter-from {
+  opacity: 0;
+  transform: translateX(50%);
+}
+.slide-leave-to {
+  opacity: 0;
+  transform: translateX(-50%);
+}
+
 :root {
   --font-rubik: 'Rubik', sans-serif;
 
@@ -198,6 +218,12 @@ display: flex;
     bottom: 0;
     width: 100%;
 
+  }
+}
+
+@media (min-width: 1000px) {
+  :root {
+    font-size: .8rem;
   }
 }
 
