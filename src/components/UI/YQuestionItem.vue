@@ -1,14 +1,14 @@
 <template>
  <div class="yqitem">
    <p class="qtext">
-     Я всегда стремлюсь делать работу до конца, но часто не успеваю
+     {{questionData.title}}
    </p>
    <div class="buttons">
-     <y-button
-       v-for="answer in answers"
-       @click="selectAnswer(answer.id)"
-       :active="(selectedAnswer[0] === answer.id)"
-     >{{answer.title}}</y-button>
+      <y-button
+        v-for="answer in answers"
+        @click="selectAnswer(answer.id)"
+        :active="(selectedAnswer[0] === answer.id)"
+      >{{answer.title}}</y-button>
    </div>
  </div>
 </template>
@@ -37,13 +37,16 @@ export default {
     }
   },
   computed: {
-    answers() {
+    questionData() {
       const coordinates = {
         test_id: this.testArrId,
         question_id: this.questionArrId
       }
-      const question = this.$store.getters.questionData(coordinates)
-      return JSON.parse(question.value)
+      const question = this.$store.getters.questionByGroupData(coordinates)
+      return question
+    },
+    answers() {
+      return JSON.parse(this.questionData.value)
     }
   }
 }
@@ -56,6 +59,9 @@ export default {
   grid-gap: 20px;
   align-items: center;
   justify-content: space-between;
+}
+.qtext {
+  text-align: center;
 }
 @media screen and (max-width:820px){
   .qtext{

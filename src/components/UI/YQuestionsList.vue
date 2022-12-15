@@ -1,13 +1,12 @@
 <template>
 <div class="yqlist">
-  <y-question-item
-    :test-arr-id="testArrId"
-    :question-arr-id="questionArrId"
-  />
-<!--  <hr>
-  <y-question-item />
-  <hr>
-  <y-question-item />-->
+  <template v-for="(question, id) in questionData" :key="`${question.createdAt}${question.id}`">
+    <y-question-item
+      :test-arr-id="testArrId"
+      :question-arr-id="questionArrId + id"
+    />
+    <hr>
+  </template>
 </div>
 </template>
 
@@ -17,6 +16,15 @@ export default {
   props: {
     testArrId: Number,
     questionArrId: Number,
+  },
+  computed: {
+    questionData() {
+      const coordinates = {
+        test_id: this.testArrId,
+        question_id: this.questionArrId
+      }
+      return this.$store.getters.questionData(coordinates)
+    }
   }
 }
 </script>

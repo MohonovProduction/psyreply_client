@@ -15,10 +15,10 @@
           Продолжить
         </y-cool-button>
         <div class="q__coins__per">
-          <div class="coins">
+<!--          <div class="coins">
             <img class="coins__img" src="@/assets/img/coins.svg" alt="">
             <p>{{questionData.coins}}</p>
-          </div>
+          </div>-->
           <p class="test__percent">{{passed}}% пройдено</p>
         </div>
       </div>
@@ -38,20 +38,19 @@ export default {
     passed: Number
   },
   computed: {
-    questionData() {
-      const coordinates = {
-        test_id: this.testArrId,
-        question_id: this.questionArrId
-      }
-      return this.$store.getters.questionData(coordinates)
-    },
     haveAnswer() {
-      const coordinates = {
-        test_id: this.testArrId,
-        answer_id: this.questionArrId
+      const blockOnPass = this.$store.getters.blockOnPass
+      const passedBlock = this.$store.getters.passedBlock
+      const questions = blockOnPass.tests[this.testArrId].questions[this.questionArrId]
+
+      let answers = 0
+      for (let i = 0; i <= questions.length - 1; i++) {
+        const passedTest = passedBlock.tests[this.testArrId]
+        const answer = passedTest.answers[this.questionArrId + i].answer
+        answers += answer.length
       }
-      const answer = this.$store.getters.passedBlockAnswer(coordinates)
-      return (answer.length > 0)
+
+      return (answers >= questions.length)
     }
   }
 }
@@ -66,8 +65,6 @@ export default {
   align-items: center;
   justify-content: end;
   flex-direction: column;
-
-
 }
 .q__modal{
   position: relative;
