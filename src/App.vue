@@ -14,14 +14,17 @@
           <template v-for="(test, test_arr_id) in blockOnPass.tests" :key="test.createdAt">
             <template v-for="(question, question_arr_id) in test.questions" :key="`${question.createdAt}${question.id}`">
               <template v-if="testNow === test_arr_id && questionNow === question_arr_id">
+<!--               One fom more  -->
                 <template v-if="test.type_id === 1">
                   <question-type3
                     :test-arr-id="test_arr_id"
                     :question-arr-id="question_arr_id"
                     :passed="percentOfPass"
+                    :more="true"
                     @next="nextQuestion(1)"
                   />
                 </template>
+<!--                Yes Not ki -->
                 <template v-else-if="test.type_id === 2">
                   <question-type1
                     :test-arr-id="test_arr_id"
@@ -30,7 +33,18 @@
                     @next="nextQuestion(1)"
                   />
                 </template>
-                <template v-else>
+<!--                More from more -->
+                <template v-else-if="test.type_id === 3">
+                  <question-type3
+                    :test-arr-id="test_arr_id"
+                    :question-arr-id="question_arr_id"
+                    :passed="percentOfPass"
+                    :more="true"
+                    @next="nextQuestion(1)"
+                  />
+                </template>
+                <template v-else-if="test.type_id === 4">
+<!--                  Range -->
                   <question-type2
                     :test-arr-id="test_arr_id"
                     :question-arr-id="question_arr_id"
@@ -68,8 +82,8 @@ export default {
   },
   data() {
     return {
-      testNow: 3,
-      questionNow: 1,
+      testNow: 0,
+      questionNow: 0,
       step: 'before-test',
       startTime: null,
       endTime: null

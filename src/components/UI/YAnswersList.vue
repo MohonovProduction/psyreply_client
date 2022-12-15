@@ -4,7 +4,7 @@
       <div class="list">
         <y-answers-item
           v-for="(answer, answer_arr_id) in answers"
-          :active="(answer.id === selectedAnswer[0])"
+          :active="(selectedAnswer.includes(answer.id))"
           @click="selectAnswer(answer.id)"
         >{{ answer.title }}</y-answers-item>
       </div>
@@ -19,6 +19,10 @@ export default {
   props: {
     testArrId: Number,
     questionArrId: Number,
+    more: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -27,7 +31,16 @@ export default {
   },
   methods: {
     selectAnswer(id) {
-      this.selectedAnswer[0] = id
+      if (!this.more) {
+        this.selectedAnswer[0] = id
+      } else {
+        if (this.selectedAnswer.includes(id)) {
+          const index = this.selectedAnswer.indexOf(id)
+          this.selectedAnswer.splice(index, 1)
+        } else {
+          this.selectedAnswer.push(id)
+        }
+      }
       const data = {
         test_id: this.testArrId,
         question_id: this.questionArrId,

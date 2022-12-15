@@ -7,6 +7,7 @@
         <y-answers-list
           :test-arr-id="testArrId"
           :question-arr-id="questionArrId"
+          :more="more"
         />
         <y-cool-button
           class="q__button"
@@ -34,7 +35,11 @@ export default {
   props: {
     testArrId: Number,
     questionArrId: Number,
-    passed: Number
+    passed: Number,
+    more: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     questionData() {
