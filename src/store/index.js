@@ -23,6 +23,11 @@ export default createStore({
       const test = state.blockOnPass.tests[coordinates.test_id]
       return test.questions[coordinates.question_id]
     },
+    questionByGroupData: (state) => (coordinates) => {
+      const test = state.blockOnPass.tests[coordinates.test_id]
+      const questionsGroup = test.questions[coordinates.question_arr_id]
+      return questionsGroup[coordinates.question_id]
+    },
     passedBlockAnswer: (state) => (coordinates) => {
       const test = state.passedBlock.tests[coordinates.test_id]
       return test.answers[coordinates.answer_id].answer
@@ -62,12 +67,10 @@ export default createStore({
         .then(res => {
           if (res.ok) {
             res.json().then(r => {
-              commit('updateBlockOnPass', r)
               const passedBlock = {
                 time_on_pass: 0,
                 tests: []
               }
-              let answersCount = 0
               r.tests.forEach(test => {
                 passedBlock.tests.push({
                   test_id: test.id,
@@ -78,12 +81,30 @@ export default createStore({
                     question_id: question.id,
                     answer: []
                   })
-                  answersCount++
                 })
               })
               commit('updatePassedBlock', passedBlock)
-              commit('allDataIsReady')
+
+              r.tests.map((test, id, array) => {
+                if (test.type_id === 2) {
+                  const questionGroups = []
+                  test.questions.forEach((el, id) => {
+                    if (id % 3 === 0) {
+                      questionGroups.push([el])
+                    } else {
+                      questionGroups[questionGroups.length - 1].push(el)
+                    }
+                  })
+                  array[id].questions = questionGroups
+                }
+              })
+              commit('updateBlockOnPass', r)
+
+              let answersCount = 0
+              r.tests.map(test => test.questions.map(q => answersCount++))
               commit('setAnswersCount', answersCount)
+
+              commit('allDataIsReady')
             })
           }
         })

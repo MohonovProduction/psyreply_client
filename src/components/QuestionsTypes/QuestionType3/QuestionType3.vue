@@ -7,6 +7,7 @@
         <y-answers-list
           :test-arr-id="testArrId"
           :question-arr-id="questionArrId"
+          :more="more"
         />
         <y-cool-button
           class="q__button"
@@ -16,10 +17,10 @@
           Продолжить
         </y-cool-button>
         <div class="q__coins__per">
-          <div class="coins">
+<!--          <div class="coins">
             <img class="coins__img" src="@/assets/img/coins.svg" alt="">
             <p>{{questionData.coins}}</p>
-          </div>
+          </div>-->
           <p class="test__percent">{{ passed }}% пройдено</p>
         </div>
       </div>
@@ -34,7 +35,11 @@ export default {
   props: {
     testArrId: Number,
     questionArrId: Number,
-    passed: Number
+    passed: Number,
+    more: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     questionData() {

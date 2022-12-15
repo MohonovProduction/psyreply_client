@@ -1,13 +1,22 @@
 <template>
-  <input type="range" >
+  <input
+    type="range"
+    :step="step"
+    :max="max"
+    :min="min"
+    @input="$emit('update:modelValue', $event.target.value)"
+  >
 </template>
 
 <script>
 
 export default {
   name:"YRange",
-  components: {
-
+  props: {
+    max: Number,
+    min: Number,
+    step: Number,
+    value: Number
   }
 }
 </script>
