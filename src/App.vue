@@ -85,7 +85,7 @@ export default {
   },
   data() {
     return {
-      testNow: 1,
+      testNow: 0,
       questionNow: 0,
       step: 'before-test',
       startTime: null,
@@ -103,7 +103,7 @@ export default {
 
       if (this.testNow !== tests.length) {
         if (this.questionNow !== questions.length - 1) {
-          this.questionNow += m
+          this.questionNow += 1
         } else {
           this.questionNow = 0
           this.testNow++

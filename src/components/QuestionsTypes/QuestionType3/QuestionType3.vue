@@ -17,10 +17,10 @@
           Продолжить
         </y-cool-button>
         <div class="q__coins__per">
-          <div class="coins">
+<!--          <div class="coins">
             <img class="coins__img" src="@/assets/img/coins.svg" alt="">
             <p>{{questionData.coins}}</p>
-          </div>
+          </div>-->
           <p class="test__percent">{{ passed }}% пройдено</p>
         </div>
       </div>

@@ -71,7 +71,6 @@ export default createStore({
                 time_on_pass: 0,
                 tests: []
               }
-              let answersCount = 0
               r.tests.forEach(test => {
                 passedBlock.tests.push({
                   test_id: test.id,
@@ -82,11 +81,9 @@ export default createStore({
                     question_id: question.id,
                     answer: []
                   })
-                  answersCount++
                 })
               })
               commit('updatePassedBlock', passedBlock)
-              commit('setAnswersCount', answersCount)
 
               r.tests.map((test, id, array) => {
                 if (test.type_id === 2) {
@@ -102,6 +99,10 @@ export default createStore({
                 }
               })
               commit('updateBlockOnPass', r)
+
+              let answersCount = 0
+              r.tests.map(test => test.questions.map(q => answersCount++))
+              commit('setAnswersCount', answersCount)
 
               commit('allDataIsReady')
             })
