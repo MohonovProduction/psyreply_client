@@ -37,9 +37,6 @@ export default {
 .button:hover {
   cursor: pointer;
 }
-.button--active {
-  background: linear-gradient(200.42deg, #B275FF 13.57%, #DD7EFF 98.35%);
-}
 .button__symbol {
   margin-left: .6rem;
   font-weight: 600;
@@ -56,5 +53,9 @@ export default {
     background: rgba(255, 255, 255, 0.16);
     white-space: nowrap;
   }
+}
+
+.button--active {
+  background: linear-gradient(200.42deg, #B275FF 13.57%, #DD7EFF 98.35%);
 }
 </style>

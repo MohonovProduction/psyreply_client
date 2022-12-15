@@ -5,7 +5,7 @@
 
       <template v-if="allDataIsReady">
         <template v-if="step === 'before-test'">
-          <y-modal>
+          <y-modal class="before_test">
             <y-cool-button @click="startTest">Начать тестирование</y-cool-button>
           </y-modal>
         </template>
@@ -45,7 +45,7 @@
 
 <!--        TODO: do beautiful-->
         <template v-if="step === 'after-test'">
-          <y-modal>
+          <y-modal class="before_test">
             <h1>Тестирование окончено</h1>
           </y-modal>
         </template>
@@ -69,7 +69,7 @@ export default {
   data() {
     return {
       testNow: 3,
-      questionNow: 0,
+      questionNow: 1,
       step: 'before-test',
       startTime: null,
       endTime: null
@@ -163,6 +163,17 @@ display: flex;
   align-items: center;
   justify-content: center;
 }
+
+.before_test {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* TODO: remove important */
+  margin-top: 5rem;
+  padding: 2rem !important;
+  width: min-content;
+}
+
 @media screen and (max-width:820px) {
   .main{
 

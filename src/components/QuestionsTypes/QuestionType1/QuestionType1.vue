@@ -47,6 +47,7 @@ export default {
       for (let i = 0; i <= questions.length - 1; i++) {
         const passedTest = passedBlock.tests[this.testArrId]
         const answer = passedTest.answers[this.questionArrId + i].answer
+        console.log(answers >=   questions.length)
         answers += answer.length
       }
 

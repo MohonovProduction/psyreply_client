@@ -6,6 +6,7 @@
    <div class="buttons">
       <y-button
         v-for="answer in answers"
+        :key="answer.id"
         @click="selectAnswer(answer.id)"
         :active="(selectedAnswer[0] === answer.id)"
       >{{answer.title}}</y-button>
