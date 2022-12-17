@@ -2,8 +2,8 @@
 <div class="results__item">
   <p class="item__title"><slot></slot></p>
   <div class="range_wrapper">
-    <div class="item__range"></div>
-    <div class="item__range_progress" :style="lineSize" ref="line">{{percent}}%</div>
+    <div class="item__range" ref="line"></div>
+    <div class="item__range_progress" ref="line__progress">{{percents}}%</div>
   </div>
 </div>
 </template>
@@ -12,16 +12,26 @@
 export default {
   name: "YResultsItem",
   props: {
-    percent: Number
+    metric: Object
   },
   data() {
     return {
     }
   },
+  mounted() {
+    const line = this.$refs.line
+    const progressLine = this.$refs.line__progress
+    const fullWidth = line.offsetWidth
+    const voidWidth = fullWidth - (fullWidth / 100 * this.percents)
+    progressLine.style.right = `${voidWidth}px`
+  },
   computed: {
-    lineSize() {
-      console.log(this.$refs.line.clientWidth)
-      return { right: '20px' }
+    percents() {
+      const values = this.metric.values
+      let max = values.sort((a, b) => b - a )[0]
+      let lastKey = Object.keys(values).sort((a, b) => b - a)[0]
+      console.log(max, lastKey)
+      return  (max > 0) ? Math.floor(values[lastKey] / max) * 100 : 0
     }
   }
 }
@@ -44,6 +54,9 @@ export default {
 .range_wrapper {
   position: relative;
 }
+.range_wrapper:hover {
+  cursor: pointer;
+}
 .item__range {
   width: 30rem;
   height: 3rem;
@@ -65,6 +78,7 @@ export default {
   justify-content: center;
   align-items: center;
   font-size: 1.5rem;
+  padding: 0 1rem;
   background: linear-gradient(200.42deg, #38F9D7 13.57%, #43E97B 98.35%);
   border-radius: 7px;
 }

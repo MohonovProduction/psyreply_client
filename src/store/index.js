@@ -30,6 +30,9 @@ export default createStore({
     passedBlock(state) {
       return state.passedBlock
     },
+    results(state) {
+      return state.results
+    },
     isAllDataReady(state) {
       return state.allDataIsReady
     },
@@ -167,7 +170,10 @@ export default createStore({
 
       client.getResults(token, userId).then(res => {
         if (res.ok) {
-          res.json().then(r => commit('updateResults', r))
+          res.json().then(r => {
+            commit('updateResults', r)
+            commit('allResultsIsReady')
+          })
         }
       })
     },

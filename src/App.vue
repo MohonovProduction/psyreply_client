@@ -57,19 +57,21 @@
             </template>
           </template>
         </template>
+      </template>
 
-<!--        TODO: do beautiful-->
-        <template v-if="step === 'after-test'">
-          <y-modal class="before_test">
-            <h1>Тест пройден</h1>
-            <y-cool-button @click="getResults">Просмотреть результаты</y-cool-button>
-          </y-modal>
-        </template>
+      <!--        TODO: do beautiful-->
+      <template v-if="step === 'after-test'">
+        <y-modal class="before_test">
+          <h1>Тест пройден</h1>
+          <y-cool-button @click="getResults">Просмотреть результаты</y-cool-button>
+        </y-modal>
+      </template>
 
+      <transition name="fade-to-top">
         <template v-if="allResultsIsReady">
           <results v-if="step === 'results'" />
         </template>
-      </template>
+      </transition>
     </div>
   </div>
 </template>
@@ -97,7 +99,6 @@ export default {
     }
 
     const view = localStorage.getItem('view')
-    console.log(view)
 
     switch (view) {
       case 'results':
@@ -195,6 +196,19 @@ export default {
 .slide-leave-to {
   opacity: 0;
   transform: translateX(-50%);
+}
+
+.fade-to-top-leave-active,
+.fade-to-top-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.5s;
+}
+
+.fade-to-top-enter-from,
+.fade-to-top-leave-to {
+  opacity: 0;
+  transform: translateY(5rem);
 }
 
 :root {
