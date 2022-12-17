@@ -66,7 +66,9 @@
           </y-modal>
         </template>
 
-        <results v-if="step === 'results'" />
+        <template v-if="allResultsIsReady">
+          <results v-if="step === 'results'" />
+        </template>
       </template>
     </div>
   </div>
@@ -84,7 +86,8 @@ export default {
     QuestionType1,QuestionType2,QuestionType3,Results
   },
   created() {
-    if (window.location.pathname.split('/').length > 1) {
+    if (window.location.pathname.length > 1) {
+
       const view = window.location.pathname.split('/')[1]
       const token = window.location.pathname.split('/')[2]
       //Crunch with localStorage, because store does not see changes after commit in router
@@ -94,6 +97,7 @@ export default {
     }
 
     const view = localStorage.getItem('view')
+    console.log(view)
 
     switch (view) {
       case 'results':
@@ -162,6 +166,9 @@ export default {
     },
     allDataIsReady() {
       return this.$store.getters.isAllDataReady
+    },
+    allResultsIsReady() {
+      return this.$store.getters.isAllResultsReady
     },
     percentOfPass() {
       return this.$store.getters.relationAnswersAndPassedAnswers

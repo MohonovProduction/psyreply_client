@@ -16,7 +16,7 @@ export default class Client {
     }
     return this.execute(`/block/user`, {
       method: 'GET',
-      headers: headers
+      headers,
     })
   }
 
@@ -30,7 +30,7 @@ export default class Client {
 
     return this.execute(`/result/block/pass`, {
       method: 'POST',
-      headers: headers,
+      headers,
       body: data
     })
   }
@@ -41,13 +41,15 @@ export default class Client {
       'Authorization': `Bearer ${blockToken}`
     }
 
-    return this.execute(`/user/${userId}/assign`,{
-      method: 'GET',
-      headers
-    })
+    return this.execute(`/user/${userId}/assign`,{ headers })
   }
 
-  getResults(token) {
+  getResults(token, userId) {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
 
+    return this.execute(`/result/${userId}/all`, { headers })
   }
 }
