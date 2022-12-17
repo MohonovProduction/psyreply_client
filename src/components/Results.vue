@@ -3,7 +3,7 @@
   <y-modal>
     <y-icon class="q__logo" />
     <div class="r__list">
-    <y-results-item>Тревога</y-results-item>
+      <y-results-item :percent="20">Тревога</y-results-item>
       <y-results-item>Уровень стресса</y-results-item>
       <y-results-item>Happy index</y-results-item>
     </div>

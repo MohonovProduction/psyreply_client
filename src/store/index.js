@@ -6,10 +6,24 @@ export default createStore({
     blockOnPass: null,
     passedBlock: null,
     allDataIsReady: false,
+    allResultsIsReady: false,
     answersCount: null,
     answersPassed: null,
+    // not use because use localStorage - it's crunch (((
+    // testToken: null,
+    // resultsToken: null,
+    view: null,
+    userId: 1, //TODO: remove after testing
+    results: null,
   },
   getters: {
+    // not use because use localStorage - it's crunch (((
+    // testToken(state) {
+    //   return state.testToken
+    // },
+    // resultsToken(state) {
+    //   return state.resultsToken
+    // },
     blockOnPass(state) {
       return state.blockOnPass
     },
@@ -18,6 +32,9 @@ export default createStore({
     },
     isAllDataReady(state) {
       return state.allDataIsReady
+    },
+    isAllResultsReady(state) {
+      return state.allResultsIsReady
     },
     questionData: (state) => (coordinates) => {
       const test = state.blockOnPass.tests[coordinates.test_id]
@@ -34,7 +51,10 @@ export default createStore({
     },
     relationAnswersAndPassedAnswers(state) {
       return Math.floor(state.answersPassed / state.answersCount * 100  )
-    }
+    },
+    view(state) {
+      return state.view
+    },
   },
   mutations: {
     updateBlockOnPass(state, block) {
@@ -43,8 +63,14 @@ export default createStore({
     updatePassedBlock(state, block) {
       state.passedBlock = block
     },
+    updateResults(state, results) {
+      state.results = results
+    },
     allDataIsReady(state) {
       state.allDataIsReady = true
+    },
+    allResultsIsReady(state) {
+      state.allResultsIsReady = true
     },
     selectAnswer(state, data) {
       const test = state.passedBlock.tests[data.test_id]
@@ -58,12 +84,23 @@ export default createStore({
     },
     setAnswersCount(state, data) {
       state.answersCount = data
+    },
+    // Not use, because tokens in localStorage - it's crunch (((
+    // setToken(state, data) {
+    //   state[`${data.type}Token`] = data.token
+    //   state.view = data.type
+    // },
+    updateUserId(state, data) {
+      state.userId = data
     }
   },
   actions: {
     async getBlock({ commit }) {
       const client = new Client()
-      client.getBlock()
+
+      const token = localStorage.getItem('testToken')
+
+      client.getBlock(token)
         .then(res => {
           if (res.ok) {
             res.json().then(r => {
@@ -109,10 +146,47 @@ export default createStore({
           }
         })
     },
-    async passBlock(ctx) {
+
+    async passBlock({ state, commit }) {
       const client = new Client()
-      client.passBlock(ctx.getters.passedBlock)
-        .then(res => {})
+
+      const token = localStorage.getItem('testToken')
+
+      client.passBlock(state.passedBlock, token)
+        .then(res => {
+          if (res.ok) {
+            res.json().then(r => commit('updateUserId', r.user_id))
+          }
+        })
+    },
+    async getResults({ commit, state }) {
+      const client = new Client()
+
+      const token = localStorage.getItem('resultsToken')
+      const userId = state.userId
+
+      client.getResults(token, userId).then(res => {
+        if (res.ok) {
+          res.json().then(r => commit('updateResults', r))
+        }
+      })
+    },
+
+    // TODO: finish writing
+    async changeTokenToUserToken({ state, commit }) {
+      const client = new Client()
+
+      const blockToken = localStorage.getItem('testToken')
+
+      client.changeTokenToUserToken(blockToken, state.userId)
+        .then(res => {
+          if (res.ok) {
+            res.json().then(r => {
+
+            })
+          }
+        })
+
     }
   },
   modules: {

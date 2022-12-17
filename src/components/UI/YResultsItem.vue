@@ -1,13 +1,29 @@
 <template>
 <div class="results__item">
   <p class="item__title"><slot></slot></p>
-  <div class="item__range"></div>
+  <div class="range_wrapper">
+    <div class="item__range"></div>
+    <div class="item__range_progress" :style="lineSize" ref="line">{{percent}}%</div>
+  </div>
 </div>
 </template>
 
 <script>
 export default {
-  name: "YResultsItem"
+  name: "YResultsItem",
+  props: {
+    percent: Number
+  },
+  data() {
+    return {
+    }
+  },
+  computed: {
+    lineSize() {
+      console.log(this.$refs.line.clientWidth)
+      return { right: '20px' }
+    }
+  }
 }
 </script>
 
@@ -25,7 +41,10 @@ export default {
   align-self: start;
   margin-bottom: 0.5rem;
 }
-.item__range{
+.range_wrapper {
+  position: relative;
+}
+.item__range {
   width: 30rem;
   height: 3rem;
   background: linear-gradient(155.31deg, rgba(255, 255, 255, 0.5) 12.33%, rgba(255, 255, 255, 0) 34.31%, rgba(255, 255, 255, 0) 52.66%, rgba(255, 255, 255, 0.54) 74.67%);
@@ -36,5 +55,17 @@ export default {
   border-right-color:rgba(255, 255, 255, 0) ;
   border-bottom-color: rgba(255, 255, 255, 0.5) ;
   border-top-color: rgba(255, 255, 255, 0.5);
+}
+.item__range_progress {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  background: linear-gradient(200.42deg, #38F9D7 13.57%, #43E97B 98.35%);
+  border-radius: 7px;
 }
 </style>

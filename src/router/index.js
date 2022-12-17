@@ -1,13 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from "@/views/HomeView";
+import store from '@/store/index'
 
 const routes = [
   {
     path: '/',
-    name: 'HomeView',
-    component: HomeView
+    component: HomeView,
   },
-
+  {
+    path: '/:view/:token',
+    component: HomeView,
+  }
 ]
 
 const router = createRouter({

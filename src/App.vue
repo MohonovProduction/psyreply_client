@@ -1,8 +1,6 @@
 <template>
   <div class="main">
     <div class="main__bottom">
-<!--      <results></results>-->
-
       <template v-if="allDataIsReady">
         <template v-if="step === 'before-test'">
           <y-modal class="before_test">
@@ -63,8 +61,13 @@
 <!--        TODO: do beautiful-->
         <template v-if="step === 'after-test'">
           <y-modal class="before_test">
-            <h1>Тестирование окончено</h1>
+            <h1>Тест пройден</h1>
+            <y-cool-button @click="getResults">Просмотреть результаты</y-cool-button>
           </y-modal>
+        </template>
+
+        <template v-if="allResultsIsReady">
+          <results v-if="step === 'results'" />
         </template>
       </template>
     </div>
@@ -75,24 +78,54 @@ import QuestionType1 from "@/components/QuestionsTypes/QuestionType1/QuestionTyp
 import QuestionType2 from "./components/QuestionsTypes/QuestionType2/QuestionType2";
 import QuestionType3 from "./components/QuestionsTypes/QuestionType3/QuestionType3";
 import Results from "./components/Results";
+import router from '@/router';
+import results from '@/components/Results';
 
 export default {
   components:{
     QuestionType1,QuestionType2,QuestionType3,Results
   },
   created() {
-    this.$store.dispatch('getBlock')
+    if (window.location.pathname.length > 1) {
+
+      const view = window.location.pathname.split('/')[1]
+      const token = window.location.pathname.split('/')[2]
+      //Crunch with localStorage, because store does not see changes after commit in router
+      localStorage.setItem(`${view}Token`, token)
+      localStorage.setItem('view', view)
+      this.$router.replace('/')
+    }
+
+    const view = localStorage.getItem('view')
+    console.log(view)
+
+    switch (view) {
+      case 'results':
+        this.step = 'results'
+        this.getResultsData()
+        break
+      case 'test':
+        this.step = 'before-test'
+        this.getBlockData()
+        break
+    }
   },
   data() {
     return {
       testNow: 0,
       questionNow: 0,
-      step: 'before-test',
+      step: null,
       startTime: null,
       endTime: null
     }
   },
   methods: {
+    getBlockData() {
+      this.$store.dispatch('getBlock')
+    },
+    getResultsData() {
+      this.$store.dispatch('getResults')
+    },
     startTest() {
       this.step = 'testing'
       this.startTime = Date.now()
@@ -122,6 +155,9 @@ export default {
 
         this.$store.dispatch('passBlock')
       }
+    },
+    getResults() {
+      this.$store.dispatch('getResultsAfterPass')
     }
   },
   computed: {
@@ -130,6 +166,9 @@ export default {
     },
     allDataIsReady() {
       return this.$store.getters.isAllDataReady
+    },
+    allResultsIsReady() {
+      return this.$store.getters.isAllResultsReady
     },
     percentOfPass() {
       return this.$store.getters.relationAnswersAndPassedAnswers
@@ -218,7 +257,7 @@ display: flex;
     position: absolute;
     bottom: 0;
     width: 100%;
-
+    color: blue
   }
 }
 
