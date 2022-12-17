@@ -6,10 +6,22 @@ export default createStore({
     blockOnPass: null,
     passedBlock: null,
     allDataIsReady: false,
+    allResultsIsReady: false,
     answersCount: null,
     answersPassed: null,
+    testToken: null,
+    resultsToken: null,
+    view: null,
+    userId: null,
+    results: null,
   },
   getters: {
+    testToken(state) {
+      return state.testToken
+    },
+    resultsToken(state) {
+      return state.resultsToken
+    },
     blockOnPass(state) {
       return state.blockOnPass
     },
@@ -34,7 +46,10 @@ export default createStore({
     },
     relationAnswersAndPassedAnswers(state) {
       return Math.floor(state.answersPassed / state.answersCount * 100  )
-    }
+    },
+    view(state) {
+      return state.view
+    },
   },
   mutations: {
     updateBlockOnPass(state, block) {
@@ -45,6 +60,9 @@ export default createStore({
     },
     allDataIsReady(state) {
       state.allDataIsReady = true
+    },
+    allResultsIsReady(state) {
+      state.allResultsIsReady = true
     },
     selectAnswer(state, data) {
       const test = state.passedBlock.tests[data.test_id]
@@ -58,12 +76,23 @@ export default createStore({
     },
     setAnswersCount(state, data) {
       state.answersCount = data
+    },
+    setToken(state, data) {
+      state[`${data.type}Token`] = data.token
+      state.view = data.type
+    },
+    updateUserId(state, data) {
+      state.userId = data
     }
   },
   actions: {
     async getBlock({ commit }) {
       const client = new Client()
-      client.getBlock()
+
+      const token = localStorage.getItem('testToken')
+      console.log(token)
+
+      client.getBlock(token)
         .then(res => {
           if (res.ok) {
             res.json().then(r => {
@@ -109,10 +138,35 @@ export default createStore({
           }
         })
     },
-    async passBlock(ctx) {
+    async passBlock({ state, commit }) {
       const client = new Client()
-      client.passBlock(ctx.getters.passedBlock)
-        .then(res => {})
+
+      const token = localStorage.getItem('testToken')
+
+      client.passBlock(state.passedBlock, token)
+        .then(res => {
+          if (res.ok) {
+            res.json().then(r => commit('updateUserId', r.user_id))
+          }
+        })
+    },
+    async getResults(ctx) {
+
+    },
+    async changeTokenToUserToken({ state, commit }) {
+      const client = new Client()
+
+      const blockToken = localStorage.getItem('testToken')
+
+      client.changeTokenToUserToken(blockToken, state.userId)
+        .then(res => {
+          if (res.ok) {
+            res.json().then(r => {
+
+            })
+          }
+        })
+
     }
   },
   modules: {

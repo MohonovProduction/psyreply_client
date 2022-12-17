@@ -1,32 +1,53 @@
 export default class Client {
-  host = 'https://api.psyreply.com'
-  headers = {
-    'Authorization': 'Bearer ' + localStorage.getItem('user_token'),
-    'Content-Type': 'application/json'
-  }
+  origin = 'https://api.psyreply.com'
 
   execute(url, init) {
     return new Promise(resolve => {
-      fetch(url, init)
+      fetch(`${this.origin}${url}`, init)
         .then(res => resolve(res))
         .catch(err => resolve(err))
     })
   }
 
-  getBlock() {
-    return this.execute(`${this.host}/block/user`, {
+  getBlock(token) {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+    return this.execute(`/block/user`, {
       method: 'GET',
-      headers: this.headers
+      headers: headers
     })
   }
 
-  passBlock(data) {
+  passBlock(data, token) {
     data = JSON.stringify(data)
 
-    return this.execute(`${this.host}/result/block/pass`, {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+
+    return this.execute(`/result/block/pass`, {
       method: 'POST',
-      headers: this.headers,
+      headers: headers,
       body: data
     })
+  }
+
+  changeTokenToUserToken(blockToken, userId) {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${blockToken}`
+    }
+
+    return this.execute(`/user/${userId}/assign`,{
+      method: 'GET',
+      headers
+    })
+  }
+
+  getResults(token) {
+
   }
 }
