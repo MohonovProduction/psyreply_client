@@ -3,9 +3,9 @@
     <div class="main__bottom">
       <template v-if="allDataIsReady">
         <template v-if="step === 'before-test'">
-          <y-modal class="before_test">
-            <y-cool-button @click="startTest">Начать тестирование</y-cool-button>
-          </y-modal>
+            <y-modal class="before_test">
+              <y-cool-button @click="startTest">Начать тестирование</y-cool-button>
+            </y-modal>
         </template>
 
         <template v-if="step === 'testing'">
@@ -59,13 +59,15 @@
         </template>
       </template>
 
-      <!--        TODO: do beautiful-->
-      <template v-if="step === 'after-test'">
-        <y-modal class="before_test">
-          <h1>Тест пройден</h1>
-          <y-cool-button @click="getResults">Просмотреть результаты</y-cool-button>
-        </y-modal>
-      </template>
+      <transition name="fade-to-top">
+        <!--        TODO: do beautiful-->
+        <template v-if="step === 'after-test'">
+          <y-modal class="before_test">
+            <h2 class="before_test__title">Тест пройден</h2>
+            <y-cool-button @click="getResults">Просмотреть результаты</y-cool-button>
+          </y-modal>
+        </template>
+      </transition>
 
       <transition name="fade-to-top">
         <template v-if="allResultsIsReady">
@@ -115,7 +117,7 @@ export default {
     return {
       testNow: 0,
       questionNow: 0,
-      step: null,
+      step: null, //TODO: remove after test
       startTime: null,
       endTime: null
     }
@@ -173,6 +175,13 @@ export default {
     },
     percentOfPass() {
       return this.$store.getters.relationAnswersAndPassedAnswers
+    }
+  },
+  watch: {
+    allResultsIsReady(newValue, oldValue) {
+      if (newValue) {
+        this.step = 'results'
+      }
     }
   }
 }
@@ -254,12 +263,17 @@ display: flex;
 
 .before_test {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   /* TODO: remove important */
   margin-top: 5rem;
   padding: 2rem !important;
   width: min-content;
+}
+
+.before_test__title {
+  margin-bottom: 1rem;
 }
 
 @media screen and (max-width:820px) {

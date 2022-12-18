@@ -178,8 +178,7 @@ export default createStore({
       })
     },
 
-    // TODO: finish writing
-    async changeTokenToUserToken({ state, commit }) {
+    async getResultsAfterPass({ state, commit, dispatch }) {
       const client = new Client()
 
       const blockToken = localStorage.getItem('testToken')
@@ -188,7 +187,9 @@ export default createStore({
         .then(res => {
           if (res.ok) {
             res.json().then(r => {
-
+              const token = r.split('t=')[1]
+              localStorage.setItem('resultsToken', token)
+              dispatch('getResults')
             })
           }
         })
