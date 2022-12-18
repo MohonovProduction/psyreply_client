@@ -37,7 +37,7 @@ export default class Client {
 
   changeTokenToUserToken(blockToken, userId) {
     const headers = {
-      'Content-Type': 'application/json',
+      // 'Content-Type': 'application/json',
       'Authorization': `Bearer ${blockToken}`
     }
 
