@@ -1,6 +1,6 @@
 <template>
 <div class="results">
-  <y-modal>
+  <y-modal class="modal">
     <y-icon class="q__logo" />
     <div class="r__list">
       <y-results-item
@@ -32,7 +32,9 @@ export default {
   align-items: center;
   justify-content: center;
   width: 100%;
-
+}
+.modal {
+  transition: all  .5s ease-in-out;
 }
 .r__list{
   margin-bottom: 5rem;

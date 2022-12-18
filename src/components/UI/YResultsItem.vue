@@ -1,10 +1,15 @@
 <template>
 <div class="results__item">
-  <p class="item__title"><slot></slot></p>
-  <div class="range_wrapper">
+  <p class="item__title">{{metric.name}}</p>
+  <div class="range_wrapper" @click="toggleCharts">
     <div class="item__range" ref="line"></div>
     <div class="item__range_progress" ref="line__progress">{{percents}}%</div>
   </div>
+  <transition name="develop">
+    <div v-if="openChart" class="chart_wrapper">
+      <apexchart width="100%" height="200px" type="line" :options="chartOptions" :series="chartSeries" />
+    </div>
+  </transition>
 </div>
 </template>
 
@@ -16,6 +21,7 @@ export default {
   },
   data() {
     return {
+      openChart: false
     }
   },
   mounted() {
@@ -25,6 +31,11 @@ export default {
     const voidWidth = fullWidth - (fullWidth / 100 * this.percents)
     progressLine.style.right = `${voidWidth}px`
   },
+  methods: {
+    toggleCharts() {
+      this.openChart = !this.openChart
+    }
+  },
   computed: {
     percents() {
       const values = this.metric.values
@@ -32,6 +43,56 @@ export default {
       let lastKey = Object.keys(values).sort((a, b) => b - a)[0]
       console.log(max, lastKey)
       return  (max > 0) ? Math.floor(values[lastKey] / max) * 100 : 0
+    },
+    chartOptions() {
+      const disable = { enabled: false }
+      const hide = { show: false }
+
+      return {
+        chart: {
+          type: 'line',
+          redrawOnParentResize: true,
+          selection: disable,
+          zoom: disable,
+          brush: disable,
+          toolbar: hide,
+        },
+        tooltip: disable,
+        stroke: {
+          colors: '#9676e1',
+        },
+        xaxis: {
+          labels: {
+            show: true,
+            style: {
+              colors: '#fff',
+              cssClass: 'apexcharts-xaxis-label',
+            },
+          }
+        },
+        yaxis: {
+          labels: {
+            show: true,
+            style: {
+              colors: '#fff',
+              cssClass: 'apexcharts-xaxis-label',
+            },
+          }
+        }
+      }
+    },
+    chartSeries() {
+      const series = []
+
+      const data = []
+      const values = this.metric.values
+      for (let key in values) {
+        data.push({ x: key, y: values[key] })
+      }
+
+      series.push({ data })
+
+      return series
     }
   }
 }
@@ -44,6 +105,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
 }
 .item__title{
   font-size: 1.5em;
@@ -81,5 +143,29 @@ export default {
   padding: 0 1rem;
   background: linear-gradient(200.42deg, #38F9D7 13.57%, #43E97B 98.35%);
   border-radius: 7px;
+}
+
+.develop-leave-active,
+.develop-enter-active {
+  opacity: 1;
+  height: 215px;
+  transition: all 0.5s;
+}
+
+.develop-enter-from,
+.develop-leave-to {
+  opacity: 0;
+  height: 0;
+}
+
+.develop-leave-active,
+.develop-enter-active,
+.develop-enter-from,
+.develop-leave-to {
+  overflow: hidden;
+}
+
+.apexcharts-xaxis-label {
+  color: #fff
 }
 </style>
