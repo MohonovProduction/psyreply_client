@@ -1,63 +1,73 @@
 <template>
   <div class="main">
     <div class="main__bottom">
-      <template v-if="allDataIsReady">
-        <template v-if="step === 'before-test'">
-            <y-modal class="before_test">
-              <y-cool-button @click="startTest">Начать тестирование</y-cool-button>
-            </y-modal>
-        </template>
-
-        <template v-if="step === 'testing'">
-          <template v-for="(test, test_arr_id) in blockOnPass.tests" :key="test.createdAt">
-            <template v-for="(question, question_arr_id) in test.questions" :key="`${question.createdAt}${question.id}`">
-<!--              TODO: change layout for transition animation -->
-<!--              <transition name="slide">-->
-                <template v-if="testNow === test_arr_id && questionNow === question_arr_id">
-                  <!--               One fom more  -->
-                  <template v-if="test.type_id === 1">
-                    <question-type3
-                      :test-arr-id="test_arr_id"
-                      :question-arr-id="question_arr_id"
-                      :passed="percentOfPass"
-                      @next="nextQuestion(1)"
-                    />
-                  </template>
-                  <!--                Yes Not ki -->
-                  <template v-else-if="test.type_id === 2">
-                    <question-type1
-                      :test-arr-id="test_arr_id"
-                      :question-arr-id="question_arr_id"
-                      :passed="percentOfPass"
-                      @next="nextQuestion(1)"
-                    />
-                  </template>
-                  <!--                More from more -->
-                  <!--                NOTE: just check 'more' attribute -->
-                  <template v-else-if="test.type_id === 3">
-                    <question-type3
-                      :test-arr-id="test_arr_id"
-                      :question-arr-id="question_arr_id"
-                      :passed="percentOfPass"
-                      :more="true"
-                      @next="nextQuestion(1)"
-                    />
-                  </template>
-                  <template v-else-if="test.type_id === 4">
-                    <!--                  Range -->
-                    <question-type2
-                      :test-arr-id="test_arr_id"
-                      :question-arr-id="question_arr_id"
-                      :passed="percentOfPass"
-                      @next="nextQuestion"
-                    />
-                  </template>
-                </template>
-<!--              </transition>-->
+      <transition name="fade-to-top">
+        <div v-if="allDataIsReady" class="bottom__container">
+          <transition name="fade-to-top">
+            <template v-if="step === 'before-test'">
+              <y-modal class="before_test">
+                <y-cool-button @click="startTest">Начать тестирование</y-cool-button>
+              </y-modal>
             </template>
-          </template>
-        </template>
-      </template>
+          </transition>
+
+          <transition name="opacity">
+            <div v-if="step === 'testing'">
+              <template v-for="(test, test_arr_id) in blockOnPass.tests" :key="test.createdAt">
+                <template v-for="(question, question_arr_id) in test.questions" :key="`${question.createdAt}${question.id}`">
+                  <!--              TODO: change layout for transition animation -->
+                  <transition name="slide">
+                    <template v-if="testNow === test_arr_id && questionNow === question_arr_id">
+                      <!--               One fom more  -->
+                      <template v-if="test.type_id === 1">
+                        <question-type3
+                          class="question"
+                          :test-arr-id="test_arr_id"
+                          :question-arr-id="question_arr_id"
+                          :passed="percentOfPass"
+                          @next="nextQuestion(1)"
+                        />
+                      </template>
+                      <!--                Yes Not ki -->
+                      <template v-else-if="test.type_id === 2">
+                        <question-type1
+                          class="question"
+                          :test-arr-id="test_arr_id"
+                          :question-arr-id="question_arr_id"
+                          :passed="percentOfPass"
+                          @next="nextQuestion(1)"
+                        />
+                      </template>
+                      <!--                More from more -->
+                      <!--                NOTE: just check 'more' attribute -->
+                      <template v-else-if="test.type_id === 3">
+                        <question-type3
+                          class="question"
+                          :test-arr-id="test_arr_id"
+                          :question-arr-id="question_arr_id"
+                          :passed="percentOfPass"
+                          :more="true"
+                          @next="nextQuestion(1)"
+                        />
+                      </template>
+                      <template v-else-if="test.type_id === 4">
+                        <!--                  Range -->
+                        <question-type2
+                          class="question"
+                          :test-arr-id="test_arr_id"
+                          :question-arr-id="question_arr_id"
+                          :passed="percentOfPass"
+                          @next="nextQuestion"
+                        />
+                      </template>
+                    </template>
+                  </transition>
+                </template>
+              </template>
+            </div>
+          </transition>
+        </div>
+      </transition>
 
       <transition name="fade-to-top">
         <!--        TODO: do beautiful-->
@@ -195,7 +205,7 @@ export default {
 .slide-enter-active {
   opacity: 1;
   transform: translateX(0);
-  transition: all 0.5s;
+  transition: all 0.5s ease-in-out;
 }
 
 .slide-enter-from {
@@ -218,6 +228,17 @@ export default {
 .fade-to-top-leave-to {
   opacity: 0;
   transform: translateY(5rem);
+}
+
+.opacity-leave-active,
+.opacity-enter-active {
+  opacity: 1;
+  transition: all 0.5s;
+}
+
+.opacity-enter-from,
+.opacity-leave-to {
+  opacity: 0;
 }
 
 :root {
@@ -256,9 +277,10 @@ export default {
   color: var(--light);
 }
 .main{
-display: flex;
+  display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 100vh;
 }
 
 .before_test {
@@ -276,15 +298,41 @@ display: flex;
   margin-bottom: 1rem;
 }
 
-@media screen and (max-width:820px) {
-  .main{
+.main__bottom {
+  position: relative;
+}
+.bottom__container {
+  width: 100%;
+}
 
-  }
-  .main__bottom{
-    display: flex;
-    position: absolute;
+.question {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+}
+
+@media screen and (max-width:820px) {
+  .before_test {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
     bottom: 0;
-    width: 100%;
+    top: auto;
+  }
+  .question {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    top: auto;
+  }
+  .main__bottom {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
   }
 }
 

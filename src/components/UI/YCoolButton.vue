@@ -22,7 +22,7 @@ export default {
   font-size: 1.025rem;
   color: var(--light);
   font-weight: 500;
-  transition: background .3s ease-in-out;
+  transition: background .3s ease-in-out, opacity .3s ease-in-out;
 }
 .button_cool:hover {
   cursor: pointer;
@@ -43,7 +43,6 @@ export default {
     font-size: 2.5rem;
     color: var(--light);
     font-weight: 500;
-    transition: background .3s ease-in-out;
   }
 }
 </style>
