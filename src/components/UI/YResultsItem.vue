@@ -115,13 +115,14 @@ export default {
 }
 .range_wrapper {
   position: relative;
+  width: 100%;
+  min-width: 300px;
 }
 .range_wrapper:hover {
   cursor: pointer;
 }
 .item__range {
-  width: 30rem;
-  height: 3rem;
+  height: 30px;
   background: linear-gradient(155.31deg, rgba(255, 255, 255, 0.5) 12.33%, rgba(255, 255, 255, 0) 34.31%, rgba(255, 255, 255, 0) 52.66%, rgba(255, 255, 255, 0.54) 74.67%);
   background-blend-mode: overlay;
   border-radius: 7px;
